@@ -1,0 +1,103 @@
+* perform energy minimization
+
+DIMENS CHSIZE 5000000 MAXRES 3000000
+
+! Read topology and parameter files
+stream toppar_drude.str
+
+! Read PSF and coordinates
+open read unit 10 card name step2_drude.psf
+read psf unit 10 card
+
+open read unit 10 card name step2_drude.crd
+read coor unit 10 card
+
+stream step2_drude.str
+
+coor sdrude
+coor shake
+
+SHAKE bonh param nofast -
+      select .not. type D* end -
+      select .not. type D* end
+
+nbonds atom vatom switch vswitch bycb -
+       ctonnb 10.0 ctofnb 12.0 cutnb 14.0 cutim 14.0 LRC -
+       inbfrq -1 imgfrq -1 wmin 1.0 cdie eps 1.0
+energy
+
+! first minimize drudes, then entire system
+cons harm force 100000. sele .not. type D* end
+mini ABNR nstep 500 nprint 50
+cons harm force 0.0 sele all end
+
+!
+! use positional restraints for equilibration
+![you can change the force constant and run longer equilibration (at least 100-200 ps)]
+!
+
+define PROT sele none end
+if nprot .gt. 0 then
+    set iprot = 0
+    label loop_prot
+    	define PROT sele PROT .or. segid @prot@@iprot end
+    incr iprot by 1
+    if iprot .lt. @nprot goto loop_prot
+endif
+
+define CARB sele none end
+if ncarb .gt. 0 then
+    set icarb = 0
+    label loop_carb
+    	define CARB sele CARB .or. segid @carb@@icarb end
+    incr icarb by 1
+    if icarb .lt. @ncarb goto loop_carb
+endif
+
+define BB sele ( ( type C   .or. type O   .or. type N   .or. type CA  .or. -
+		   type P   .or. type O1P .or. type O2P .or. type O5' .or. -
+		   type C5' .or. type C4' .or. type C3' .or. type O3' ) .and. PROT ) .or. -
+	       ( ( type C+ .or. ( type O5 .and. .bonded. type C1 ) .or. ( type O6 .and. .bonded. type C2 ) ) .and. CARB ) end
+define SC sele .not. BB .and. .not. hydrogen .and. ( PROT .or. CARB ) end
+
+cons harm force 10.0 sele BB end
+cons harm force 1 sele SC end
+
+mini SD   nstep 500 nprint 50
+mini ABNR nstep 500 nprint 50	        
+
+open write unit 10 card name step2_drude.pdb
+write coor unit 10 pdb
+
+open write unit 10 card name step2_drude.crd
+write coor unit 10 card
+
+crystal free
+
+! namd restraints
+scalar wmain set 0
+scalar wmain set 5 sele .not. resn swm4 .and. .not. type D* end
+write coor pdb name restraint.pdb
+
+stream ../4_openmm/step3_charmm2omm.inp
+
+stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 

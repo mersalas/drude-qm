@@ -1,0 +1,81 @@
+; Parameters for TFE (2,2,2-trifluroethanol)
+; To be used in conjunction with the CHARMM36m forcefield files.
+; Please cite the following reference when using this topology:
+; Chen, I.-J., Yin, D. and MacKerell, Jr., A.D., "Combined Ab
+; initio/Empirical Approach for Optimization of Lennard-Jones Parameters
+; for Polar-Neutral Compounds," Journal of Computational Chemistry, 
+; 2002, 23:199-213.
+
+[ moleculetype ]
+; Name            nrexcl
+ TFE               3
+
+[ atoms ]
+;   nr       type  resnr residue  atom   cgnr     charge       mass  
+; residue   1 TFE rtp TFE  q  0.0
+     1      OG311      1    TFE     O1      1      -0.59    15.9994
+     2       HGP1      1    TFE    HO1      2       0.41      1.008
+     3       HGA2      1    TFE    H11      3       0.09      1.008
+     4       HGA2      1    TFE    H12      4       0.09      1.008
+     5      CG321      1    TFE     C1      5       0.08     12.011
+     6       FGA3      1    TFE    F21      6      -0.14     18.998
+     7       FGA3      1    TFE    F22      7      -0.14     18.998
+     8       FGA3      1    TFE    F23      8      -0.14     18.998
+     9      CG302      1    TFE     C2      9       0.34     12.011   ; qtot 0
+
+[ bonds ]
+;   ai     aj funct    		b0           kb 
+     1      2   1	0.09600000    456056.00	; OG311	HGP1
+     1      5   1 	0.14200000    358150.40	; OG311	CG321	
+     3      5   1	0.11110000    258571.20 ; HGA2	CG321 
+     4      5   1 	0.11110000    258571.20	; HGA2	CG321
+     5      9   1 	0.15200000    209200.00	; CG321	CG302
+     6      9   1 	0.13400000    221752.00	; FGA3	CG302
+     7      9   1 	0.13400000    221752.00	; FGA3	CG302
+     8      9   1 	0.13400000    221752.00	; FGA3	CG302
+
+[ pairs ]
+;  ai    aj funct           
+    1     6     1 
+    1     7     1 
+    1     8     1 
+    2     3     1 
+    2     4     1 
+    2     9     1 
+    3     6     1 
+    3     7     1 
+    3     8     1 
+    4     6     1 
+    4     7     1 
+    4     8     1 
+
+[ angles ]
+;  ai    aj    ak funct       	theta0       ktheta          ub0	   kub
+    2     1     5     5		106.000000   418.400000   0.00000000        0.00 ; HGP1	 OG311	CG321 
+    1     5     3     5         108.890000   384.091200   0.00000000        0.00 ; OG311 CG321	HGA2 
+    1     5     4     5 	108.890000   384.091200   0.00000000        0.00 ; OG311 CG321	HGA2
+    1     5     9     5		110.100000   633.457600   0.00000000        0.00 ; OG311 CG321	CG302 
+    3     5     4     5		109.000000   297.064000   0.18020000     4518.72 ; HGA2  CG321	HGA2 
+    3     5     9     5		110.100000   289.532800   0.21790000    18853.10 ; HGA2  CG321	CG302 
+    4     5     9     5		110.100000   289.532800   0.21790000    18853.10 ; HGA2	 CG321	CG302 
+    5     9     6     5		112.000000   351.456000   0.23570000    25104.00 ; CG321 CG302	FGA3 
+    5     9     7     5 	112.000000   351.456000   0.23570000    25104.00 ; CG321 CG302	FGA3
+    5     9     8     5		112.000000   351.456000   0.23570000    25104.00 ; CG321 CG302	FGA3 
+    6     9     7     5 	107.000000   987.424000   0.21550000    25104.00 ; FGA3	 CG302	FGA3	
+    6     9     8     5		107.000000   987.424000   0.21550000    25104.00 ; FGA3	 CG302	FGA3 
+    7     9     8     5 	107.000000   987.424000   0.21550000    25104.00 ; FGA3	 CG302	FGA3
+
+[ dihedrals ]
+;  ai    aj    ak    al  func         phi0   kphi  	mult
+    2     1     5     3     9	0.000000     0.753120     3 ; HGP1  OG311 CG321 HGA2 
+    2     1     5     4     9	0.000000     0.753120     3 ; HGP1  OG311 CG321 HGA2 
+    2     1     5     9     9 	0.000000     1.673600     1 ; HGP1  OG311 CG321 CG302      
+    1     5     9     6     9	0.000000     1.046000     3 ; OG311 CG321 CG302 FGA3 
+    1     5     9     7     9 	0.000000     1.046000     3 ; OG311 CG321 CG302	FGA3
+    1     5     9     8     9 	0.000000     1.046000     3 ; OG311 CG321 CG302	FGA3
+    3     5     9     6     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3 
+    3     5     9     7     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3 
+    3     5     9     8     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3 
+    4     5     9     6     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3 
+    4     5     9     7     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3	 
+    4     5     9     8     9	0.000000     0.661072     3 ; HGA2  CG321 CG302	FGA3

@@ -1,0 +1,128 @@
+a. Generate topology
+# initial structures of lipopeptides: 1_gromacs/coord
+# mdp files: 1_gromacs/paramtr 
+$ mkdir 1_setup 2_gromacs 3_drude 4_openmm
+$ cd 1_setup
+$ gmx pdb2gmx -f MRH.pdb -o 1_MRH.pdb -p 1_MRH.top -i 1_MRH_posre.itp -ignh -ter -inter -water tip3p
+Choose: 9 (Charmm36); 1 (ARG); 1 (HSE); 8 (None for MYRN); 2 (CT2: C-amidation)
+
+b. Define box & add TFE
+$ gmx editconf -f 1_MRH.pdb -o 2_MRH_box.pdb -c -d 1.4 -bt cubic
+$ gmx solvate -cp 2_MRH_box.pdb -cs spc216.gro -p 1_MRH.top -o 2_MRH_solv.pdb
+nmol TFE = (4.5/55.5) x nH2O (4475) + Q (1) = 364  
+$ gmx insert-molecules -f 2_MRH_box.pdb -ci tfe.pdb -o 2_MRH_tfe.pdb -nmol 364
+In the top file add:
+; Include TFE topology
+#include "tfe.itp"
+[molecules]
+remove SOL & replace TFE 364
+
+c. Add ions
+$ gmx grompp -f ../../paramtr/ions.mdp -p 1_MRH.top -c 2_MRH_tfe.pdb -o 3_MRH_ions.tpr -maxwarn 1 
+$ gmx genion -s 3_MRH_ions.tpr -p 1_MRH.top -pname NA -nname CL -neutral -o 3_MRH30_ions.pdb
+Select 13 (TFE)
+
+d. Solvate
+$ gmx solvate -cp 3_MRH30_ions.pdb -cs spc216.gro -p 1_MRH.top -o 4_MRH30_solv.pdb
+$ vmd -> pdb box
+
+e. Energy minimization
+$ cd ../2_gromacs
+$ gmx grompp -f ../../paramtr/minim.mdp -c ../1_setup/4_MRH30_solv.pdb -p ../1_setup/1_MRH.top -o 1_MRH30_em.tpr
+$ gmx mdrun -v -s 1_MRH30_em.tpr -deffnm 1_em -c 1_MRH30_em.pdb
+Note: Epot = -10^5 - 10^6; Fmax = <1000 KJ/mol-nm; 3000 steps is enough
+$ gmx energy -f 1_em.edr -o 1_potential.xvg 
+Select 12 (Potential)
+$ xmgrace 1_potential.xvg
+
+f. NVT equilibration
+$ gmx grompp -f ../../paramtr/nvt.mdp -c 1_MRH30_em.pdb -r 1_MRH30_em.pdb -p ../1_setup/1_MRH.top -o 2_MRH30_nvt.tpr
+$ gmx mdrun -v -s 2_MRH30_nvt.tpr -deffnm 2_nvt -c 2_MRH30_nvt.pdb
+$ gmx energy -f 2_nvt.edr -o 2_temperature.xvg
+Select 16 (Temperature)
+$ xmgrace 2_temperature.xvg
+Note: 100 ps is enough
+
+g. NPT equilibration
+Note: Pcoupl = C-rescale as recommended by Gromacs
+$ gmx grompp -f ../../paramtr/npt.mdp -c 2_MRH30_nvt.pdb -r 2_MRH30_nvt.pdb -t 2_nvt.cpt -p ../1_setup/1_MRH.top -o 3_MRH30_npt.tpr
+$ gmx mdrun -v -s 3_MRH30_npt.tpr -deffnm 3_npt -c 3_MRH30_npt.pdb
+$ gmx energy -f 3_npt.edr -o 3_pressure.xvg
+Select 17 (Pressure)
+$ xmgrace 3_pressure.xvg
+$ gmx energy -f 3_npt.edr -o 3_density.xvg
+Select 23 (Density)
+$ xmgrace 3_density.xvg 
+
+h. parameterize new residue in cgenff & ffparam
+# input & output files: 2_ffparam 
+> upload mol2 file
+> input job name & ON copy existing params
+> run cgenff, convert to gromacs & download res.str
+$ ffparam-gui
+> load res.str, input resname & click "get drude param"
+> load res_d.str, select drude, input resname, click load, fetch MM prereq, & generate init coord
+> copy drude_toppar_2023, update ffparam.inp & toppar_drude.str
+> QM input for geom opt: res_init.crd, Psi4, nproc=10, mem=2000MB & click create
+> QM calc: res_opt_dipo_pol.py, Psi4 & click execute
+> Extract QM results: res_opt_dipo_pol.out; cartesian_geom, intcoor_geom or dipole_polar; click extract
+> MM Calc: ffparam.inp; res_d.str; res_mp2.crd; drude; input resname; cartesian_geom, intcoor_geom or dipole_polar; minimize, CHARMM & click run MM
+> Compare QM & MM:
+  * geom: view res_min.crd & res_mp2.crd in pymol
+  * int coor: mm_intcoor_res.txt, qm_intcoor_res.txt, intcoor_geom, click compare
+  * dipol: mm_dipol_res.txt, qm_dipol_res.txt, dipole_polar, click compare 
+> AutoFit: ffparam.inp, res_d.str, res_mp2.crd, 1, 5000, input resname, qm_dipol_res.txt, CHARMM, click execute
+> manually copy res_mcsa_bstrms.str & edit params into toppar_drude_main_protein_2023a.str, topper_drude_model_2023a.str, etc.
+Note: For dihedral select only one appropriate n to avoid NaN
+
+i. generate psf file
+# rename MYRN to ARG & also its atoms in 3_MRH30_npt.pdb
+# Renumber residue:
+$ python renumber_residues.py # Note: adjust input filename
+
+# Rename pdb atoms to Charmm36m atom names & save MRH, tfe, tip3, cl using modpdb.tlc
+# Note: File names should be in small letter to avoid error in charmm
+# processed pdb & psf files: 3_drude/coord
+# drude MD scripts: 3_drude/scripts
+$ cd ../3_drude
+$ vmd -dispdev text -e 1_modpdb.tcl > 1_modpdb.log
+Combine MRH, tfe, tip3 & cl & generate psf & pdb file using psfgen tcl file
+$ vmd -dispdev text -e 2_psfgen.tcl > 2_psfgen.log
+Use previous psf as guide to edit psf for title spacings; copy the zeros in NGRP 
+
+j. convert pdb to crd
+$ vmd -dispdev text
+> mol new 2_mrh30.psf 
+> mol addfile 2_mrh30.pdb
+> source 3_write_charmm_crd.tcl
+> writecharmmcoor "3_mrh30.crd" 0 "normal"
+
+k. separating segments
+$ charmm -i step1_reader.inp -o step1_reader.out
+
+l. generate drude psf
+$ charmm -i step2_drude.inp -o step2_drude.out
+
+m. minimize & generate openmm inputs
+$ charmm -i step3_input.inp -o step3_input.out
+$ cd ../4_openmm
+$ perl check_drude_lengths.pl step3_charmm2omm.pdb 0.2
+
+n. perform openmm equilibration
+# openmm scripts: 4_openmm
+$ chmod +x step4_equilibration.csh
+$ conda activate ash
+$ ./step4_equilibration.csh
+view the traj: open ChimeraX, load step3_charmm2omm.pdb & step4_equilibration.dcd
+save pdb: last frame -> save as pdb
+convert pdb to crd
+$ vmd -dispdev text
+> mol new step3_charmm2omm.psf 
+> mol addfile step4_equilibration.pdb
+> source write_charmm_crd.tcl
+> writecharmmcoor "step4_equilibration.crd" 0 "normal"
+
+o. production run
+$ chmod +x step5_production.csh
+$ ./step5_production.csh
+Note: if set init2 = step5_2, set cnt = 3 to avoid rewriting step5_2 files

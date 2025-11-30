@@ -1,0 +1,272 @@
+MD analysis
+A. Correct for periodicity
+# concatenate dcd & convert to xtc
+# strip drude, solvent, unwrap, center & wrap
+# fit on protein backbone
+$ conda activate ash
+$ python clean_fit_write.py
+rename ARG to MYRN & renumber the residues
+make sure all are in ATOM 
+
+# check atom counts
+$ grep -c '^ATOM' mrhr1_clean.pdb
+
+# check xtc
+$ gmx check -f mrhr1_clean_fit.xtc
+
+B. Minimum distances between periodic images
+$ gmx mindist -f mrhr1_clean_fit.xtc -s mrhr1_clean.pdb -od min_dist.xvg -tu ns -pi
+Select 1 (Protein)
+$ xmgrace -nxy min_dist.xvg ; should >2.0 
+
+C. Root mean square fluctuations (RMSF) - flexible region
+$ gmx rmsf -f mrhr1_clean_fit.xtc -s mrhr1_clean.pdb -o rmsf_res.xvg -ox mrhr1_ave.pdb -oq bfactors_res.pdb -res 
+Long peptides: Select 3 (C-alpha) or 4 (Backbone)
+Small peptides: Select 1 (Protein) 
+$ xmgrace rmsf_res.xvg
+open bfactors_res.pdb in ChimeraX
+select b-factors; blue (most stable) & red (most fluctuating)
+
+D. Root mean square deviation (RMSD) - equilibrium state
+# RMSD with initial structure
+$ gmx rms -f mrhr1_clean_fit.xtc -s mrhr1_clean.pdb -tu ns -o rmsd.xvg
+Select 4 (Backbone) for both LSF & RMSD calc
+
+# RMSD with average structure
+$ gmx rms -f mrhr1_clean_fit.xtc -s mrhr1_ave.pdb -tu ns -o rmsd_ave.xvg
+Select 4 (Backbone) for both LSF & RMSD calc
+$ xmgrace rmsd.xvg rmsd_ave.xvg
+
+E. Radius of gyration (Rg) - stability
+$ gmx gyrate -f mrhr1_clean_fit.xtc -s mrhr1_clean.pdb -tu ns -o gyrate.xvg
+Select 1 (Protein)
+$ xmgrace gyrate.xvg 
+
+F. Extract trajectory 
+$ gmx trjconv -b 50000 -e 200000 -f mrhr1_clean_fit.xtc -s mrhr1_clean.pdb -o mrhr1_50-200eq.xtc
+Select 1 (Protein)
+
+G. Concatenate trajectory
+$ gmx trjcat -f mrhr1_50-200eq.xtc mrhr2_50-200eq.xtc -o mrh_0-300_cat.xtc -cat -settime
+Enter c to continue
+$ gmx check -f mrh_0-300_cat.xtc
+
+H. Index files
+a. pi-pi
+$ gmx make_ndx -f mhhr1_clean.pdb -o pi_H2-H3.ndx 
+> keep 0
+> del 0
+> r 2 & a CG CD2 NE2 CE1 ND1
+> name 0 H2
+> r 3 & a CG CD2 NE2 CE1 ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mhhr1_clean.pdb -o ang_piH2-H3.ndx 
+> keep 0
+> del 0
+> r 2 & a CG CE1 ND1
+> name 0 H2
+> r 3 & a CG CE1 ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mrhr1_clean.pdb -o pi_R2-H3.ndx
+> keep 0
+> del 0
+> r 2 & a NE CZ NH1 NH2
+> name 0 R2
+> r 3 & a CG CD2 NE2 CE1 ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mrhr1_clean.pdb -o ang_piR2-H3.ndx
+> keep 0
+> del 0
+> r 2 & a CZ NH1 NH2
+> name 0 R2
+> r 3 & a CG CE1 ND1
+> name 1 H3
+> q
+
+b. cation-pi
+$ gmx make_ndx -f mrhr1_clean.pdb -o cat_R2-H3.ndx 
+> keep 0
+> del 0
+> r 2 & a CZ	# Lys (NZ); Orn (NE); Dab (ND); Dap (NG)
+> name 0 R2
+> r 3 & a CG CD2 NE2 CE1 ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mrhr1_clean.pdb -o ang_catR2-H3.ndx 
+> keep 0
+> del 0
+> r 2 & a NE CZ   # Lys (CE NZ); Orn (CD NE); Dab (CG ND); Dap (CB NG)  
+> name 0 R2
+> r 3 & a CG CE1 ND1
+> name 1 H3
+> q
+
+c. CH-pi
+$ gmx make_ndx -f mhhr1_clean.pdb -o cb_chH2-H3
+> keep 0
+> del 0
+> r 2 & a CB   # His (CD2 & CE1); Arg (CD); Lys (CE); Orn (CD); Dab (CG); Dap (CB)
+> name 0 H2
+> r 3 & a CG CD2 NE2 CE1 ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mhhr1_clean.pdb -o ang_cb_chH2-H3
+> keep 0
+> del 0
+> r 2 & a CB HB1   # His (CD2 HD2 & CE1 HE1); Arg (CD HD1); Lys (CE HE1); Orn (CD HD1); Dab (CG HG1); Dap (CB HB1)
+> name 0 H2
+> r 3 & a CG CE1 ND1
+> name 1 H3
+> q
+
+d. H-bond
+$ gmx make_ndx -f mhhr1_clean.pdb -o hb_H2-H3
+> keep 0
+> del 0
+> r 2 & a HE2   # Arg (HE, HH11 & HH21), Lys (HZ1), Orn (HE1), Dab (HD1), Dap (HG1) 
+> name 0 H2
+> r 3 & a ND1
+> name 1 H3
+> q
+
+$ gmx make_ndx -f mhhr1_clean.pdb -o ang_hb_H2-H3
+> keep 0
+> del 0
+> r 2 & a NE2 HE2   # Arg (NE HE, NH1 HH11 & NH2 HH21), Lys (NZ HZ1), Orn (NE HE1), Dab (ND HD1), Dap (NG HG1) 
+> name 0 H2
+> r 3 & a ND1 CG
+> name 1 H3
+> q
+
+I. Distances
+a. pi-pi
+$ gmx distance -s mhhr1_clean.pdb -f mhh_0-300_cat.xtc -n pi_H2-H3.ndx -oav pi_dist_ave.xvg -oall pi_dist_all.xvg -tu ns -select 'com of group "H2" plus com of group "H3"' 
+$ xmgrace dist_ave.xvg
+$ gmx analyze -f dist_all.xvg -dist dist_hist.xvg -normalize
+$ xmgrace dist_hist.xvg
+
+b. cation-pi
+$ gmx distance -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n cat_R2-H3.ndx -oav cat_dist_ave.xvg -oall cat_dist_all.xvg -tu ns -select 'com of group "R2" plus com of group "H3"'
+
+# Note: similar to CH-pi & H-bond
+
+J. Angle
+a. pi-pi
+$ gmx gangle -s mhhr1_clean.pdb -f mhh_0-300_cat.xtc -n ang_piH2-H3.ndx -g1 plane -group1 "H2" -g2 plane -group2 "H3" -oav pi_ang_ave.xvg -oall pi_ang_all.xvg -tu ns
+$ xmgrace angle_ave.xvg
+
+$ gmx gangle -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n ang_piR2-H3.ndx -g1 plane -group1 "R2" -g2 plane -group2 "H3" -oav pi_ang_ave.xvg -oall pi_ang_all.xvg -tu ns
+
+b. cation-pi
+$ gmx gangle -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n ang_catR2-H3.ndx -g1 vector -group1 "R2" -g2 plane -group2 "H3" -oav cat_ang_ave.xvg -oall cat_ang_all.xvg -tu ns
+
+c. CH-pi
+$ gmx gangle -s mhhr1_clean.pdb -f mhh_0-300_cat.xtc -n ang_cb_chH2-H3.ndx -g1 vector -group1 "H2" -g2 plane -group2 "H3" -oav cb_ang_ave.xvg -oall cb_ang_all.xvg -tu ns
+
+d. H-bond
+$ gmx gangle -s mhhr1_clean.pdb -f mhh_0-300_cat.xtc -n ang_hb_H2-H3.ndx -g1 vector -group1 "H2" -g2 vector -group2 "H3" -oav hb_ang_ave.xvg -oall hb_ang_all.xvg -tu ns
+
+K. Radial distribution function
+use the index file in H
+a. pi-pi 
+$ gmx rdf -s mhhr1_clean.pdb -f mhh_0-300_cat.xtc -n H2-H3.ndx -selrpos whole_mol_com -ref 'group "H2"' -sel 'group "H3"' -norm number_density -bin 0.02 -tu ns -o rdf_mhh.xvg 
+
+b. cation-pi
+$ gmx rdf -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n R2-H3.ndx -selrpos whole_mol_com -ref 'group "R2"' -sel 'group "H3"' -norm number_density -bin 0.02 -tu ns -o rdf_mrh.xvg 
+$ xmgrace rdf_mrh.xvg
+
+L. Clustering to extract representative structure
+1. recompute distance & angle in ps
+$ gmx distance -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n pi_R2-H3.ndx -select 'com of group "R2" plus com of group "H3"' -oall pi_dist_all.xvg
+
+$ gmx gangle -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc -n ang_piR2-H3.ndx -g1 plane -group1 "R2" -g2 plane -group2 "H3" -oall pi_ang_all.xvg
+# for Lys: -g1 vector
+
+2. Pull out frame numbers that satisfy cation-pi criteria
+$ tail -n +3 pi_dist_all.xvg > tmp_dist.dat
+$ tail -n +3 pi_ang_all.xvg > tmp_ang.dat
+$ paste tmp_dist.dat tmp_ang.dat > tmp_all.dat
+$ awk '{if ($2<=0.60 && $4<=90) print $1}' tmp_all.dat > catpi_frames.txt
+$ rm tmp_dist.dat tmp_ang.dat  # remove tmp files
+
+# Criteria
+pi-pi: awk '{if ($2 < 0.50 && $4 < 45.0) print $1}' tmp_all.dat > pipi_frames.txt 
+cation-pi: awk '{if ($2 <= 0.60 && $4 < 90.0) print $1}' tmp_all.dat > catpi_frames.txt
+CH-pi: awk '{if ($2 < 0.45 && $4 > 120.0) print $1}' tmp_all.dat > chpi_frames.txt 
+H-bond: awk '{if ($2 >= 0.14 && $2 <= 0.28 && $4 >= 80.0 && $4 <= 180.0) print $1}' tmp_all.dat > hbond_frames.txt
+
+3. extract frames into new traj
+# clean up list
+grep -v '^#' catpi_frames.txt > clean_frames.txt
+OR
+run select_basin.ipynb
+
+# loop over each time (ps) & dump to a separate .xtc
+mkdir -p single_frames
+while read time; do
+   gmx trjconv -s mrhr1_clean.pdb -f mrh_0-300_cat.xtc \
+   -o single_frames/frame_${time}.xtc -dump ${time} <<EOF
+Protein
+EOF
+done < catpi_frames.txt
+
+# stitch them all back into one traj
+$ gmx trjcat -f single_frames/frame_*.xtc -o catpi_frames.xtc
+
+3. build new index for clustering 
+$ gmx make_ndx -f mrhr1_clean.pdb -o cat_R2-H3_rmsd.ndx
+> r ARG & a CZ | r HSE & a CG ND1 CD2 CE1 NE2
+> name 10 R2-H3
+> q
+
+4. cluster extracted frames
+# sweep thru cutoffs
+$ mkdir cluster && cd cluster
+$ gmx cluster -f ../catpi_frames.xtc -s ../mrhr1_clean.pdb -n ../R2-H3_rmsd.ndx -method gromos -cutoff 0.1 -g cluster_0.1.log -o cluster_0.1.xpm -sz size_0.1.xvg -cl mrh_rep_0.1.pdb
+# select group: 10 (R2-H3) for RMSD; 1 (Protein) for output
+# adjust cutoff to secure 3-5 clusters
+
+QM calculations
+1. split cluster using ChimeraX
+File -> Save -> Choose one model from "Save models" -> Save displayed atoms
+
+2. delete other atoms except those involved in cation-pi interaction (e.g. guanidinium & imidazole) -> save xyz file for complex & monomers
+
+3. build QM input
+Quantum Chemistry -> build QM Input
+file type: ORCA; charge: 1; geometry optimization: check; processors: 10; memory: 4 GB
+method: wB97X-D3; dispersion: Becke-Johnson damped Grimme D3; basis set: def2-TZVP; add TightSCF
+
+4. edit to perform Opt & SP calc for the 1st cluster in each cutoff
+! Opt wB97X-D3 def2-SVP RIJCOSX def2/J CPCM TightSCF
+%geom
+  OptimizeHydrogens true
+  MaxIter 200
+end
+####
+! SP revDSD-PBEP86-D4/2021 def2-QZVPPD RIJCOSX def2/J TightSCF CPCM
+%basis
+  basis   "def2-QZVPPD"
+  aux     "def2/J"           # RI-J (for SCF/RIJCOSX)
+  auxC    "def2-QZVPPD/C"    # required for RI-MP2 (AuxC)
+end
+####
+%pal nprocs 10 end
+%maxcore 2000
+%cpcm epsilon 68.27 end
+
+5. run QM to calc <E> of cation-pi
+$ export Orca=/home/rlsalas/orca/orca
+$Orca RHc1_cplx_bsse.inp > RHc1_cplx_bsse.out
+
+
+
+

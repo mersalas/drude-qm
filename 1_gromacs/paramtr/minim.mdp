@@ -1,0 +1,25 @@
+; minim.mdp - used as input into grompp to generate em.tpr
+; Define can be used to control processes
+define		= -DFLEXIBLE ; Include flexible TIP3P water model
+
+; Parameters describing what to do, when to stop and what to save
+integrator	= cg		; conjugate gradient minimization
+emtol		= 10.0  	; [kJ/mol/nm] minimization is converged when max force is < emtol
+emstep      	= 0.01     	; [nm] initial step-size
+nstcgsteep	= 500		; frequency of steepest descents when doing cg
+nsteps		= 50000 	; maximum number of steps to integrate
+
+; Parameters describing how to find the neighbors of each atom and how to calculate the interactions
+nstlist		    = 10	     ; [steps] freq to update neighbor list
+cutoff-scheme       = Verlet         ; buffered neighbor searching
+ns_type		    = grid	     ; search neighboring grid cells
+rlist		    = 1.2	     ; [nm] cut-off distance for short range neighbors
+coulombtype	    = PME	     ; Particle Mesh Ewald for long-range electrostatics
+rcoulomb	    = 1.2	     ; [nm] distance for Coulomb cut-off
+vdwtype             = cutoff	     ; plain cut-off with rlist & rvdw
+vdw-modifier        = force-switch   ; switches the forced to 0 bet rvdw-switch & rvdw
+rvdw-switch         = 1.0	     ; [nm] where to start switching LJ force
+rvdw		    = 1.2	     ; [nm] distance for LJ cut-off
+pbc		    = xyz 	     ; periodic boundary conditions in all 
+DispCorr            = no	     ; don't apply any correction
+
