@@ -1,7 +1,7 @@
 # drude-qm
 MD and QM files for the drude paper
 
-Paper: [Length of the methylene side chain in lysine modulates non-covalent interactions in histidine-rich peptides]()
+Paper: [Side chain length in lysine and its homologs modulates non-covalent interactions in histidine-rich peptides]()
 
 ![Drude MD Workflow](workflow.png)
 
@@ -23,7 +23,7 @@ Paper: [Length of the methylene side chain in lysine modulates non-covalent inte
 ```bibtex
 @unpublished{Salas2025,
 author = {Remmer L. Salas and Portia Mahal G. Sabido and Ricky B. Nellas},
-title = {Length of the methylene side chain in lysine modulates non-covalent interactions in histidine-rich peptides},
+title = {Side chain length in lysine and its homologs modulates non-covalent interactions in histidine-rich peptides},
 journal = {},
 volume = {},
 pages = {},
