@@ -1,22 +1,45 @@
-ATOM      1  C1  UNK a   1       3.310  -0.981  -0.073  1.00  0.00           C
-ATOM      2  N1  UNK a   1       3.717  -1.034  -1.461  1.00  0.00           N
-ATOM      3  H1  UNK a   1       4.588  -1.561  -1.594  1.00  0.00           H
-ATOM      4  H2  UNK a   1       3.012  -1.482  -2.057  1.00  0.00           H
-ATOM      5  H3  UNK a   1       3.878  -0.100  -1.856  1.00  0.00           H
-ATOM      6  H4  UNK a   1       2.372  -0.421   0.008  1.00  0.00           H
-ATOM      7  H5  UNK a   1       4.091  -0.484   0.513  1.00  0.00           H
-ATOM      8  H6  UNK a   1       3.161  -2.001   0.298  1.00  0.00           H
-ATOM      9  C2  UNK a   1      -0.746   0.268   2.616  1.00  0.00           C
-ATOM     10  N2  UNK a   1      -0.890   1.259   0.350  1.00  0.00           N
-ATOM     11  N3  UNK a   1      -0.582  -0.440  -0.945  1.00  0.00           N
-ATOM     12  H7  UNK a   1      -0.472  -0.974  -1.800  1.00  0.00           H
-ATOM     13  C3  UNK a   1      -0.618   0.151   1.102  1.00  0.00           C
-ATOM     14  C4  UNK a   1      -0.815   0.829  -0.866  1.00  0.00           C
-ATOM     15  H8  UNK a   1      -0.962   1.441  -1.759  1.00  0.00           H
-ATOM     16  C5  UNK a   1      -0.419  -0.917   0.319  1.00  0.00           C
-ATOM     17  H9  UNK a   1      -0.213  -1.962   0.533  1.00  0.00           H
-ATOM     18  H10 UNK a   1      -0.482  -0.672   3.120  1.00  0.00           H
-ATOM     19  H11 UNK a   1      -1.782   0.525   2.883  1.00  0.00           H
-ATOM     20  H12 UNK a   1      -0.092   1.065   3.001  1.00  0.00           H
-TER      21      UNK a   1
+TITLE     frame t= 531280.000
+REMARK    THIS IS A SIMULATION BOX
+SEQRES   1 X    2  DAB HSE
+CRYST1   50.344   50.314   52.076  90.00  90.00  90.00 P 1           1
+HETATM    1  CG  DAB X   2       3.311  -0.874  -0.059  1.00  0.00           C
+HETATM    2  ND  DAB X   2       3.713  -1.070  -1.436  1.00  0.00           N
+HETATM    3  HD1 DAB X   2       4.673  -1.441  -1.519  1.00  0.00           H
+HETATM    4  HD2 DAB X   2       3.086  -1.685  -1.959  1.00  0.00           H
+HETATM    5  HD3 DAB X   2       3.738  -0.181  -1.954  1.00  0.00           H
+HETATM    6  HG1 DAB X   2       2.295  -0.483  -0.029  1.00  0.00           H
+HETATM    7  HG2 DAB X   2       3.350  -1.826   0.469  1.00  0.00           H
+HETATM    8  HG3 DAB X   2       3.988  -0.165   0.419  1.00  0.00           H
+HETATM    9  CB  HSE X   3      -0.771   0.239   2.636  1.00  0.00           C
+HETATM   10  ND1 HSE X   3      -0.568   1.255   0.348  1.00  0.00           N
+HETATM   11  NE2 HSE X   3      -0.690  -0.489  -0.944  1.00  0.00           N
+HETATM   12  HE2 HSE X   3      -0.675  -1.001  -1.799  1.00  0.00           H
+HETATM   13  CG  HSE X   3      -0.720   0.120   1.117  1.00  0.00           C
+HETATM   14  CE1 HSE X   3      -0.527   0.862  -0.899  1.00  0.00           C
+HETATM   15  HE1 HSE X   3      -0.390   1.490  -1.780  1.00  0.00           H
+HETATM   16  CD2 HSE X   3      -0.791  -0.945   0.363  1.00  0.00           C
+HETATM   17  HD2 HSE X   3      -0.840  -2.014   0.517  1.00  0.00           H
+HETATM   18  HB1 HSE X   3      -0.894  -0.752   3.074  1.00  0.00           H
+HETATM   19  HB2 HSE X   3      -1.612   0.870   2.923  1.00  0.00           H
+HETATM   20  HB3 HSE X   3       0.156   0.683   2.997  1.00  0.00           H
+CONECT    1    2    6    7    8
+CONECT    2    1    3    4    5
+CONECT    3    2
+CONECT    4    2
+CONECT    5    2
+CONECT    6    1
+CONECT    7    1
+CONECT    8    1
+CONECT    9   13   18   19   20
+CONECT   10   13   14
+CONECT   11   12   14   16
+CONECT   12   11
+CONECT   13    9   10   16
+CONECT   14   10   11   15
+CONECT   15   14
+CONECT   16   11   13   17
+CONECT   17   16
+CONECT   18    9
+CONECT   19    9
+CONECT   20    9
 END

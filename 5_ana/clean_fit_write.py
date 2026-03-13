@@ -5,17 +5,17 @@ from MDAnalysis.transformations import unwrap, center_in_box, wrap
 import sys
 
 pdb_in = "../4_openmm/step4_equilibration.pdb"   # PDB used when running OpenMM (must match DCD atom order)
-dcds = ["../mhh1/step5_1.dcd", "../mhh1/step5_2.dcd"]
+dcds = ["../2_MRH/step5_1.dcd", "../2_MRH/step5_2.dcd"]
         
-pdb_out = "mhhr1_clean.pdb"
-xtc_out = "mhhr1_clean_fit.xtc"
+pdb_out = "mrhr1_clean.pdb"
+xtc_out = "mrhr1_clean_fit.xtc"
 reference = pdb_in      # ref for fitting (usually the initial PDB)
 
 # Load Universe 
 u = mda.Universe(pdb_in, dcds)
 
 # Select protein only, no drude & solvent
-prot = u.select_atoms("protein and not (name D* or name DC* or name LP*)")
+prot = u.select_atoms("(protein or resname DPP) and not (name D* or name DC* or name LP*)")
 
 print(f"Original atom count: {len(u.atoms)}, kept atoms: {len(prot)}")
 

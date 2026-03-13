@@ -1,27 +1,54 @@
-ATOM      1  C1  UNK a   1       4.560  -0.709   1.011  1.00  0.00           C
-ATOM      2  N1  UNK a   1       3.850   0.264   1.813  1.00  0.00           N
-ATOM      3  H1  UNK a   1       3.043   0.039   2.383  1.00  0.00           H
-ATOM      4  C2  UNK a   1       4.473   1.485   1.949  1.00  0.00           C
-ATOM      5  N2  UNK a   1       5.645   1.799   1.369  1.00  0.00           N
-ATOM      6  H2  UNK a   1       6.229   1.101   0.926  1.00  0.00           H
-ATOM      7  H3  UNK a   1       6.029   2.728   1.485  1.00  0.00           H
-ATOM      8  N3  UNK a   1       3.851   2.451   2.629  1.00  0.00           N
-ATOM      9  H4  UNK a   1       2.935   2.295   3.032  1.00  0.00           H
-ATOM     10  H5  UNK a   1       4.294   3.346   2.794  1.00  0.00           H
-ATOM     11  H6  UNK a   1       4.729  -0.326  -0.006  1.00  0.00           H
-ATOM     12  H7  UNK a   1       3.945  -1.613   0.926  1.00  0.00           H
-ATOM     13  H8  UNK a   1       5.522  -0.998   1.464  1.00  0.00           H
-ATOM     14  C3  UNK a   1      -1.619  -1.571   1.335  1.00  0.00           C
-ATOM     15  N4  UNK a   1      -0.458   0.543   0.882  1.00  0.00           N
-ATOM     16  N5  UNK a   1       0.739   0.125  -0.944  1.00  0.00           N
-ATOM     17  H9  UNK a   1       1.378   0.274  -1.717  1.00  0.00           H
-ATOM     18  C4  UNK a   1      -0.713  -0.733   0.440  1.00  0.00           C
-ATOM     19  C5  UNK a   1       0.420   1.029   0.025  1.00  0.00           C
-ATOM     20  H10 UNK a   1       0.865   2.025   0.052  1.00  0.00           H
-ATOM     21  C6  UNK a   1       0.012  -1.007  -0.688  1.00  0.00           C
-ATOM     22  H11 UNK a   1       0.081  -1.898  -1.307  1.00  0.00           H
-ATOM     23  H12 UNK a   1      -1.802  -2.571   0.917  1.00  0.00           H
-ATOM     24  H13 UNK a   1      -1.154  -1.689   2.325  1.00  0.00           H
-ATOM     25  H14 UNK a   1      -2.587  -1.069   1.474  1.00  0.00           H
-TER      26      UNK a   1
+TITLE     frame t= 351180.000
+REMARK    THIS IS A SIMULATION BOX
+CRYST1   50.538   51.026   51.565  90.00  90.00  90.00 P 1           1
+ATOM      1  CD  ARG X   2       4.573  -0.724   1.002  1.00  0.00           C
+ATOM      2  NE  ARG X   2       3.871   0.239   1.824  1.00  0.00           N
+ATOM      3  HE  ARG X   2       3.041   0.072   2.366  1.00  0.00           H
+ATOM      4  CZ  ARG X   2       4.496   1.458   1.970  1.00  0.00           C
+ATOM      5  NH1 ARG X   2       5.662   1.779   1.382  1.00  0.00           N
+ATOM      6 HH11 ARG X   2       6.349   1.153   0.982  1.00  0.00           H
+ATOM      7 HH12 ARG X   2       6.007   2.721   1.304  1.00  0.00           H
+ATOM      8  NH2 ARG X   2       3.881   2.414   2.669  1.00  0.00           N
+ATOM      9 HH21 ARG X   2       2.939   2.276   2.999  1.00  0.00           H
+ATOM     10 HH22 ARG X   2       3.938   3.406   2.465  1.00  0.00           H
+ATOM     11  HD1 ARG X   2       5.436  -0.246   0.538  1.00  0.00           H
+ATOM     12  HD2 ARG X   2       3.903  -1.095   0.226  1.00  0.00           H
+ATOM     13  HD3 ARG X   2       4.907  -1.556   1.622  1.00  0.00           H
+HETATM   14  CB  HSE X   3      -1.602  -1.590   1.379  1.00  0.00           C
+HETATM   15  ND1 HSE X   3      -0.446   0.530   0.942  1.00  0.00           N
+HETATM   16  NE2 HSE X   3       0.732   0.137  -0.902  1.00  0.00           N
+HETATM   17  HE2 HSE X   3       1.256   0.320  -1.732  1.00  0.00           H
+HETATM   18  CG  HSE X   3      -0.706  -0.740   0.486  1.00  0.00           C
+HETATM   19  CE1 HSE X   3       0.423   1.027   0.083  1.00  0.00           C
+HETATM   20  HE1 HSE X   3       0.955   1.983   0.122  1.00  0.00           H
+HETATM   21  CD2 HSE X   3       0.007  -0.999  -0.653  1.00  0.00           C
+HETATM   22  HD2 HSE X   3       0.094  -1.869  -1.282  1.00  0.00           H
+HETATM   23  HB1 HSE X   3      -1.743  -2.571   0.926  1.00  0.00           H
+HETATM   24  HB2 HSE X   3      -1.136  -1.705   2.358  1.00  0.00           H
+HETATM   25  HB3 HSE X   3      -2.570  -1.101   1.494  1.00  0.00           H
+CONECT    1    2   11   12   13
+CONECT    2    1    3    4
+CONECT    3    2
+CONECT    4    2    5    8
+CONECT    5    4    6    7
+CONECT    6    5
+CONECT    7    5
+CONECT    8    4    9   10
+CONECT    9    8
+CONECT   10    8
+CONECT   11    1
+CONECT   12    1
+CONECT   13    1
+CONECT   14   18   23   24   25
+CONECT   15   18   19
+CONECT   16   17   19   21
+CONECT   17   16
+CONECT   18   14   15   21
+CONECT   19   15   16   20
+CONECT   20   19
+CONECT   21   16   18   22
+CONECT   22   21
+CONECT   23   14
+CONECT   24   14
+CONECT   25   14
 END

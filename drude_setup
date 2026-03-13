@@ -55,7 +55,8 @@ Select 23 (Density)
 $ xmgrace 3_density.xvg 
 
 h. parameterize new residue in cgenff & ffparam
-# input & output files: 2_ffparam 
+# input & output files: 2_ffparam
+> login to CGenFF webserver
 > upload mol2 file
 > input job name & ON copy existing params
 > run cgenff, convert to gromacs & download res.str
