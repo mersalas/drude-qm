@@ -21,7 +21,7 @@ Paper: [Side chain length in lysine and its homologues modulates noncovalent int
 
 ## How to cite:
 ```bibtex
-@published{Salas2026,
+@article{Salas2026,
 author = {Remmer L. Salas and Portia Mahal G. Sabido and Ricky B. Nellas},
 title = {Side chain length in lysine and its homologues modulates noncovalent interactions in histidine-rich peptides},
 journal = {The Journal of Physical Chemistry B},
