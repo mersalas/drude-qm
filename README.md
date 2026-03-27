@@ -1,7 +1,7 @@
 # drude-qm
 MD and QM files for the drude paper
 
-Paper: [Side chain length in lysine and its homologs modulates non-covalent interactions in histidine-rich peptides]()
+Paper: [Side chain length in lysine and its homologues modulates noncovalent interactions in histidine-rich peptides]()
 
 ![Drude MD Workflow](workflow.png)
 
@@ -21,12 +21,13 @@ Paper: [Side chain length in lysine and its homologs modulates non-covalent inte
 
 ## How to cite:
 ```bibtex
-@unpublished{Salas2025,
+@published{Salas2026,
 author = {Remmer L. Salas and Portia Mahal G. Sabido and Ricky B. Nellas},
-title = {Side chain length in lysine and its homologs modulates non-covalent interactions in histidine-rich peptides},
-journal = {},
+title = {Side chain length in lysine and its homologues modulates noncovalent interactions in histidine-rich peptides},
+journal = {The Journal of Physical Chemistry B},
 volume = {},
 pages = {},
 year = {2026},
-doi = {},
+doi = {https://doi.org/10.1021/acs.jpcb.5c08666},
+url = {https://pubs.acs.org/doi/full/10.1021/acs.jpcb.5c08666},
 }
