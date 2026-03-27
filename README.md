@@ -1,7 +1,7 @@
 # drude-qm
 MD and QM files for the drude paper
 
-Paper: [Side chain length in lysine and its homologues modulates noncovalent interactions in histidine-rich peptides]()
+Paper: [Side chain length in lysine and its homologues modulates noncovalent interactions in histidine-rich peptides](https://pubs.acs.org/doi/full/10.1021/acs.jpcb.5c08666)
 
 ![Drude MD Workflow](workflow.png)
 
